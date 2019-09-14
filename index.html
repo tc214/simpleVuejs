@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自定义双向绑定</title>
+</head>
+<body>
+	<h1 id="name"></h1>
+	<input type="text" id="inpdut">
+	<input type="button" value="改变data内容" onclick="changeData()">
+	
+<script src="observer.js"></script>
+<script src="watcher.js"></script>
+<script>
+    // 定义一个对象： 使用带参数的构造函数
+	function MyVueObj (data, el, exp) {
+	    this.data = data;
+	    observable(data);                        // 将数据（把对象的每一项）变得可观测
+	    el.innerHTML = this.data[exp];           // 初始化模板数据的值
+	    new Watcher(this, exp, function (value) {
+	        el.innerHTML = value;
+	    });
+	    return this; // 也可以省略
+	}
+
+    // 获取文档中 id="name" 的元素
+	var eleTitle = document.querySelector('#name');
+	// 获取文档中第一个 <input> 元素
+	var input = document.querySelector('input');
+	// 生成对象
+    var myVue = new MyVueObj({
+		name: '初始值'
+	}, eleTitle, 'name');
+ 	
+	//改变输入框内容
+    input.oninput = function (e) {
+    	myVue.data.name = e.target.value
+    }
+	//改变data内容
+	function changeData(){
+		myVue.data.name = "初始值"
+	
+	}
+</script>
+</body>
+</html>
